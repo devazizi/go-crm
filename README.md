@@ -1,0 +1,1 @@
+*** This is simple Golang Gin project written for fun ***
