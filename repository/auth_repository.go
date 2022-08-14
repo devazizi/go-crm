@@ -7,6 +7,7 @@ import (
 
 type AuthRepository interface {
 	CheckUserExistsByEmail(DB infra.DB, email string) (entity.User, error)
+	CheckEmailIsUnique(DB infra.DB, email string) bool
 }
 
 func CheckUserExistsByEmail(DB infra.DB, email string) (entity.User, error) {
@@ -19,4 +20,15 @@ func CheckUserExistsByEmail(DB infra.DB, email string) (entity.User, error) {
 	}
 
 	return user, nil
+}
+
+func CheckEmailIsUnique(DB infra.DB, email string) bool {
+	var user entity.User
+	DB.Connection.Model(user).Where("email = ?", email).Find(&user)
+
+	if user.ID == 0 {
+		return true
+	}
+
+	return false
 }

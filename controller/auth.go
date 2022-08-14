@@ -4,6 +4,7 @@ import (
 	"github.com/devazizi/go-crm/contract"
 	"github.com/devazizi/go-crm/contract/request"
 	"github.com/devazizi/go-crm/contract/response"
+	"github.com/devazizi/go-crm/entity"
 	"github.com/devazizi/go-crm/infrastructure"
 	"github.com/devazizi/go-crm/repository"
 	"github.com/devazizi/go-crm/service/jwt"
@@ -45,9 +46,31 @@ func LoginAPI(DB infrastructure.DB, requestValidator contract.ValidateLoginReque
 	}
 }
 
-func RegisterAPI(DB infrastructure.DB) gin.HandlerFunc {
+func RegisterAPI(DB infrastructure.DB, validator contract.ValidateRegisterRequestFields) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		request := request.RegisterRequest{}
 
+		if err := c.BindJSON(&request); err != nil {
+			c.JSON(http.StatusBadRequest, response.Response{Message: err.Error(), Status: false})
+			return
+		}
+
+		if err := validator(request, DB); err != nil {
+			c.JSON(http.StatusBadRequest, response.Response{Message: err.Error(), Status: false})
+			return
+		}
+
+		encryptedPass, _ := bcrypt.GenerateFromPassword([]byte(request.Paassword), 1)
+
+		user := entity.User{
+			Email:    request.Email,
+			Name:     request.Name,
+			Password: string(encryptedPass),
+		}
+
+		repository.CreateUser(DB, user)
+
+		c.JSON(http.StatusCreated, response.Response{Status: response.SUCCESS, Data: request})
 	}
 }
 

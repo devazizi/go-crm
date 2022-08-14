@@ -26,7 +26,7 @@ func router(router *gin.Engine, database infra.DB) {
 		authRoutes := apiV1.Group("/auth")
 		{
 			authRoutes.POST("/login", controller.LoginAPI(database, validation.ValidateLoginRequestFields))
-			authRoutes.POST("/register", controller.RegisterAPI(database))
+			authRoutes.POST("/register", controller.RegisterAPI(database, validation.ValidateRegisterRequestFields))
 			//authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
 		}
 	}
