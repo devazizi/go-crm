@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/devazizi/go-crm/contract"
 	"github.com/devazizi/go-crm/contract/request"
 	"github.com/devazizi/go-crm/contract/response"
 	"github.com/devazizi/go-crm/infrastructure"
@@ -11,21 +12,27 @@ import (
 	"net/http"
 )
 
-func LoginAPI(DB infrastructure.DB, req request.LoginRequest) gin.HandlerFunc {
+func LoginAPI(DB infrastructure.DB, requestValidator contract.ValidateLoginRequestFields) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		if err := c.BindJSON(&req); err != nil {
+		loginRequest := request.LoginRequest{}
+		if err := c.BindJSON(&loginRequest); err != nil {
 			c.JSON(http.StatusBadRequest, response.Response{Message: err.Error(), Status: false})
 			return
 		}
 
-		user, err := repository.CheckUserExistsByEmail(DB, req.Email)
+		if err := requestValidator(loginRequest); err != nil {
+			c.JSON(http.StatusUnprocessableEntity, response.Response{Message: err.Error(), Status: false})
+			return
+		}
+
+		user, err := repository.CheckUserExistsByEmail(DB, loginRequest.Email)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "email or password incorrect"})
 			return
 		}
 
-		if err := bcrypt.CompareHashAndPassword([]byte(user.GetPassword()), []byte(req.Password)); err != nil {
+		if err := bcrypt.CompareHashAndPassword([]byte(user.GetPassword()), []byte(loginRequest.Password)); err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "email or password incorrect"})
 			return
 		}

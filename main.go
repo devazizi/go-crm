@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/devazizi/go-crm/contract/request"
+	"github.com/devazizi/go-crm/contract/validation"
 	"github.com/devazizi/go-crm/controller"
 	infra "github.com/devazizi/go-crm/infrastructure"
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ func router(router *gin.Engine, database infra.DB) {
 	{
 		authRoutes := apiV1.Group("/auth")
 		{
-			authRoutes.POST("/login", controller.LoginAPI(database, request.LoginRequest{}))
+			authRoutes.POST("/login", controller.LoginAPI(database, validation.ValidateLoginRequestFields))
 			authRoutes.POST("/register", controller.RegisterAPI(database))
 			//authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
 		}
