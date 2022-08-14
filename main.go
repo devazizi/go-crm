@@ -1,39 +1,34 @@
 package main
 
 import (
-	"fmt"
+	"github.com/devazizi/go-crm/contract/request"
 	"github.com/devazizi/go-crm/controller"
-	"github.com/devazizi/go-crm/entity"
-	"github.com/devazizi/go-crm/service/jwt"
+	infra "github.com/devazizi/go-crm/infrastructure"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
-	//dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
-	//DbConnection := infra.NewDB(dsn)
+	dsn := "host=localhost user=postgres password=12345678 dbname=go_01 port=5432 sslmode=disable TimeZone=Asia/Tehran"
+	DbConnection := infra.NewDB(dsn)
 
-	user := entity.User{Name: "alireza aizizi", ID: 433434, Email: "dev.azizimail@gmail.com"}
-	token, _ := jwt.CreateToken("2332-abcd-acdf-ccd2", user)
-	fmt.Println(token)
 	routerEngine := gin.Default()
-	//router(routerEngine, DbConnection)
-	router(routerEngine)
+	router(routerEngine, DbConnection)
+
 	routerEngine.Run(":9000")
 }
 
-//func router(router *gin.Engine, Database infra.DB) {
-//	router.GET("/", controller.HomeAPI())
-//}
-
-func router(router *gin.Engine) {
+func router(router *gin.Engine, database infra.DB) {
 	router.GET("/", controller.HomeAPI())
 
-	authRoutes := router.Group("/auth")
+	apiV1 := router.Group("/api/v1")
 	{
-		authRoutes.POST("/login", controller.LoginAPI(nil))
-		authRoutes.POST("/register", controller.RegisterAPI(nil))
-		authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
+		authRoutes := apiV1.Group("/auth")
+		{
+			authRoutes.POST("/login", controller.LoginAPI(database, request.LoginRequest{}))
+			authRoutes.POST("/register", controller.RegisterAPI(database))
+			//authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
+		}
 	}
 
 	//usersRoutes := router.Group("/users")

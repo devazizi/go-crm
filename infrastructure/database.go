@@ -2,7 +2,7 @@ package infrastructure
 
 import (
 	"github.com/devazizi/go-crm/entity"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +11,7 @@ type DB struct {
 }
 
 func NewDB(dsn string) DB {
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		panic("can not connect to database")
@@ -19,8 +19,8 @@ func NewDB(dsn string) DB {
 
 	var entities = []any{
 		&entity.User{},
-		&entity.Task{},
-		&entity.TaskCategory{},
+		//&entity.Task{},
+		//&entity.TaskCategory{},
 	}
 
 	if autoMigrate := db.AutoMigrate(entities...); autoMigrate != nil {
