@@ -17,7 +17,7 @@ func NewDB(dsn string) DB {
 		panic("can not connect to database")
 	}
 
-	var entities []any = []any{
+	var entities = []any{
 		&entity.User{},
 		&entity.Task{},
 		&entity.TaskCategory{},

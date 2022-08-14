@@ -1,12 +1,14 @@
 package entity
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
-	ID        uint   `json:"id"`
-	Name      string `json:"name"`
-	Email     string `json:"email"`
-	password  string
+	ID        uint      `json:"id"`
+	Name      string    `json:"name", gorm:"size:256"`
+	Email     string    `json:"email" gorm:"size:256"`
+	password  string    `gorm:"size:512"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
