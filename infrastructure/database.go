@@ -19,8 +19,8 @@ func NewDB(dsn string) DB {
 
 	var entities = []any{
 		&entity.User{},
-		//&entity.Task{},
-		//&entity.TaskCategory{},
+		&entity.Task{},
+		&entity.TaskCategory{},
 	}
 
 	if autoMigrate := db.AutoMigrate(entities...); autoMigrate != nil {
