@@ -9,6 +9,7 @@ import (
 	"github.com/devazizi/go-crm/repository"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func IndexTasks(DB infrastructure.DB) gin.HandlerFunc {
@@ -19,6 +20,22 @@ func IndexTasks(DB infrastructure.DB) gin.HandlerFunc {
 			Status: true,
 			Data:   tasks,
 		})
+	}
+}
+
+func GetTask(DB infrastructure.DB) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		taskId, _ := strconv.Atoi(c.Param("taskId"))
+
+		task, err := repository.GetTask(DB, taskId)
+
+		if err != nil {
+			c.JSON(http.StatusNotFound, response.Response{Message: "not found"})
+			return
+		}
+
+		c.JSON(http.StatusNotFound, response.Response{Status: true, Data: task})
 	}
 }
 

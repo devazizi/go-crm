@@ -35,7 +35,7 @@ func router(router *gin.Engine, database infra.DB) {
 		{
 			taskRoutes.GET("/", controller.IndexTasks(database))
 			taskRoutes.POST("/", controller.CreateTask(database, validation.ValidateCreateTaskRequest))
-			//	//taskRoutes.GET("/:taskId")
+			taskRoutes.GET("/:taskId", controller.GetTask(database))
 			//	//taskRoutes.DELETE("/:taskId")
 		}
 	}
