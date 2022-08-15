@@ -3,33 +3,43 @@ package repository
 import (
 	"errors"
 	"github.com/devazizi/go-crm/entity"
-	"github.com/devazizi/go-crm/infrastructure"
 	"gorm.io/gorm"
 )
 
 type TaskRepository interface {
-	CreateTask(DB infrastructure.DB, task entity.Task)
-	IndexTask(DB infrastructure.DB) []TaskRepository
-	GetTask(DB infrastructure.DB, taskId int) (entity.Task, error)
+	CreateTask(task entity.Task)
+	IndexTask() []TaskRepository
+	GetTask(taskId int) (entity.Task, error)
+	DeleteTask(task entity.Task) error
 }
 
-func CreateTask(DB infrastructure.DB, task entity.Task) {
-	DB.Connection.Create(&task)
-	DB.Connection.Save(&task)
+func (intractor Interactor) CreateTask(task entity.Task) {
+	intractor.store.Create(&task)
+	intractor.store.Save(&task)
 }
 
-func IndexTask(DB infrastructure.DB) []entity.Task {
+func (intractor Interactor) DeleteTask(task entity.Task) error {
+	err := intractor.store.Model(&task).Association("AssignTo").Clear()
+	if err != nil {
+		return err
+	}
+	intractor.store.Delete(&task)
+
+	return nil
+}
+
+func (intractor Interactor) IndexTask() []entity.Task {
 	var tasks []entity.Task
 
-	DB.Connection.Preload("AssignTo").Find(&tasks)
+	intractor.store.Preload("AssignTo").Find(&tasks)
 
 	return tasks
 }
 
-func GetTask(DB infrastructure.DB, taskId int) (entity.Task, error) {
+func (intractor Interactor) GetTask(taskId int) (entity.Task, error) {
 	var task entity.Task
 
-	result := DB.Connection.Preload("AssignTo").Preload("User").First(&task, taskId)
+	result := intractor.store.Preload("AssignTo").Preload("User").First(&task, taskId)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return task, result.Error

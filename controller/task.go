@@ -14,7 +14,7 @@ import (
 
 func IndexTasks(DB infrastructure.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tasks := repository.IndexTask(DB)
+		tasks := repository.New(DB).IndexTask()
 
 		c.JSON(http.StatusOK, response.Response{
 			Status: true,
@@ -28,7 +28,7 @@ func GetTask(DB infrastructure.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		taskId, _ := strconv.Atoi(c.Param("taskId"))
 
-		task, err := repository.GetTask(DB, taskId)
+		task, err := repository.New(DB).GetTask(taskId)
 
 		if err != nil {
 			c.JSON(http.StatusNotFound, response.Response{Message: "not found"})
@@ -61,7 +61,7 @@ func CreateTask(DB infrastructure.DB, validator contract.ValidateCreateTaskReque
 
 		task := entity.Task{UserID: 1, Name: createTaskRequest.Name, CategoryId: createTaskRequest.CategoryID, AssignTo: assignTo}
 
-		repository.CreateTask(DB, task)
+		repository.New(DB).CreateTask(task)
 
 		c.JSON(http.StatusCreated, createTaskRequest)
 	}
@@ -72,13 +72,15 @@ func DeleteTask(DB infrastructure.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		taskId, _ := strconv.Atoi(c.Param("taskId"))
 
-		task, err := repository.GetTask(DB, taskId)
+		task, err := repository.New(DB).GetTask(taskId)
 
 		if err != nil {
 			c.JSON(http.StatusNotFound, response.Response{Message: "not found"})
 			return
 		}
 
-		c.JSON(http.StatusNotFound, response.Response{Status: true, Data: task})
+		repository.New(DB).DeleteTask(task)
+
+		c.JSON(http.StatusOK, response.Response{Status: true, Data: task})
 	}
 }

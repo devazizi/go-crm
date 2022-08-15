@@ -31,12 +31,13 @@ func router(router *gin.Engine, database infra.DB) {
 			authRoutes.POST("/register", controller.RegisterAPI(database, validation.ValidateRegisterRequestFields))
 			//authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
 		}
-		taskRoutes := apiV1.Group("/tasks").Use(middlewareCheckAuthenticated())
+		//.Use(middlewareCheckAuthenticated())
+		taskRoutes := apiV1.Group("/tasks")
 		{
 			taskRoutes.GET("/", controller.IndexTasks(database))
 			taskRoutes.POST("/", controller.CreateTask(database, validation.ValidateCreateTaskRequest))
 			taskRoutes.GET("/:taskId", controller.GetTask(database))
-			//taskRoutes.DELETE("/:taskId")
+			taskRoutes.DELETE("/:taskId", controller.DeleteTask(database))
 		}
 	}
 
