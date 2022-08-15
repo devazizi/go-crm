@@ -65,5 +65,20 @@ func CreateTask(DB infrastructure.DB, validator contract.ValidateCreateTaskReque
 
 		c.JSON(http.StatusCreated, createTaskRequest)
 	}
+}
 
+func DeleteTask(DB infrastructure.DB) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		taskId, _ := strconv.Atoi(c.Param("taskId"))
+
+		task, err := repository.GetTask(DB, taskId)
+
+		if err != nil {
+			c.JSON(http.StatusNotFound, response.Response{Message: "not found"})
+			return
+		}
+
+		c.JSON(http.StatusNotFound, response.Response{Status: true, Data: task})
+	}
 }
