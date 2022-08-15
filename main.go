@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"github.com/devazizi/go-crm/contract/response"
 	"github.com/devazizi/go-crm/contract/validation"
 	"github.com/devazizi/go-crm/controller"
 	infra "github.com/devazizi/go-crm/infrastructure"
@@ -29,6 +31,12 @@ func router(router *gin.Engine, database infra.DB) {
 			authRoutes.POST("/register", controller.RegisterAPI(database, validation.ValidateRegisterRequestFields))
 			//authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
 		}
+		taskRoutes := apiV1.Group("/tasks").Use(middlewareCheckAuthenticated())
+		{
+			taskRoutes.GET("/", controller.IndexTasks(database))
+			//	//taskRoutes.GET("/:taskId")
+			//	//taskRoutes.DELETE("/:taskId")
+		}
 	}
 
 	//usersRoutes := router.Group("/users")
@@ -41,10 +49,20 @@ func router(router *gin.Engine, database infra.DB) {
 	//	//usersRoutes.GET("/user")
 	//}
 	//
-	//taskRoutes := router.Group("/tasks")
-	//{
-	//	//taskRoutes.GET("/")
-	//	//taskRoutes.GET("/:taskId")
-	//	//taskRoutes.DELETE("/:taskId")
-	//}
+
+}
+
+func middlewareCheckAuthenticated() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authorizationKey := c.GetHeader("Authorization")
+
+		if authorizationKey == "" {
+			c.JSON(401, response.Response{Status: false, Message: "authorization fail"})
+			return
+		}
+
+		fmt.Println(authorizationKey)
+
+		c.Next()
+	}
 }
