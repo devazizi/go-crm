@@ -13,7 +13,12 @@ import (
 
 func IndexTasks(DB infrastructure.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": true})
+		tasks := repository.IndexTask(DB)
+
+		c.JSON(http.StatusOK, response.Response{
+			Status: true,
+			Data:   tasks,
+		})
 	}
 }
 
