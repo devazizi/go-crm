@@ -8,4 +8,5 @@ import (
 type (
 	ValidateLoginRequestFields    func(req request.LoginRequest) error
 	ValidateRegisterRequestFields func(registerRequest request.RegisterRequest, DB infrastructure.DB) error
+	ValidateCreateTaskRequest     func(req request.CreateTaskRequest) error
 )

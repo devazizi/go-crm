@@ -34,6 +34,7 @@ func router(router *gin.Engine, database infra.DB) {
 		taskRoutes := apiV1.Group("/tasks").Use(middlewareCheckAuthenticated())
 		{
 			taskRoutes.GET("/", controller.IndexTasks(database))
+			taskRoutes.POST("/", controller.CreateTask(database, validation.ValidateCreateTaskRequest))
 			//	//taskRoutes.GET("/:taskId")
 			//	//taskRoutes.DELETE("/:taskId")
 		}
