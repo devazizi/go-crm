@@ -7,6 +7,7 @@ import (
 	"github.com/devazizi/go-crm/entity"
 	"github.com/devazizi/go-crm/infrastructure"
 	"github.com/devazizi/go-crm/repository"
+	"github.com/devazizi/go-crm/service/auth"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -53,13 +54,21 @@ func CreateTask(DB infrastructure.DB, validator contract.ValidateCreateTaskReque
 			return
 		}
 
+		auth := auth.GetAuthentication()
+
 		var assignTo []entity.User
 
-		for userId := range createTaskRequest.AssignTo {
+		for _, userId := range createTaskRequest.AssignTo {
 			assignTo = append(assignTo, entity.User{ID: uint(userId)})
 		}
 
-		task := entity.Task{UserID: 1, Name: createTaskRequest.Name, CategoryId: createTaskRequest.CategoryID, AssignTo: assignTo}
+		task := entity.Task{
+			User:        entity.User{ID: uint(auth.UserId)},
+			Name:        createTaskRequest.Name,
+			CategoryId:  createTaskRequest.CategoryID,
+			AssignTo:    assignTo,
+			Description: createTaskRequest.Description,
+		}
 
 		repository.New(DB).CreateTask(task)
 

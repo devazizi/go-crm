@@ -1,12 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"github.com/devazizi/go-crm/contract/response"
 	"github.com/devazizi/go-crm/contract/validation"
 	"github.com/devazizi/go-crm/controller"
 	infra "github.com/devazizi/go-crm/infrastructure"
+	"github.com/devazizi/go-crm/service/auth"
+	"github.com/devazizi/go-crm/service/jwt"
 	"github.com/gin-gonic/gin"
+	"strings"
 )
 
 func main() {
@@ -31,8 +33,8 @@ func router(router *gin.Engine, database infra.DB) {
 			authRoutes.POST("/register", controller.RegisterAPI(database, validation.ValidateRegisterRequestFields))
 			//authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
 		}
-		//.Use(middlewareCheckAuthenticated())
-		taskRoutes := apiV1.Group("/tasks")
+		taskRoutes := apiV1.Group("/tasks").Use(middlewareCheckAuthenticated())
+
 		{
 			taskRoutes.GET("/", controller.IndexTasks(database))
 			taskRoutes.POST("/", controller.CreateTask(database, validation.ValidateCreateTaskRequest))
@@ -63,7 +65,15 @@ func middlewareCheckAuthenticated() gin.HandlerFunc {
 			return
 		}
 
-		fmt.Println(authorizationKey)
+		tokenData := strings.Split(authorizationKey, " ")
+
+		jwtCredentials, _ := jwt.GetClaimsFromToken(tokenData[1])
+		userInfo := jwtCredentials["UserInfo"]
+		user := userInfo.(map[string]interface{})
+
+		userId := user["id"].(float64)
+		authentication := auth.Authentication{UserId: int(userId), Token: tokenData[1]}
+		authentication.SetAuthentication()
 
 		c.Next()
 	}

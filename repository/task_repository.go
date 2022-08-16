@@ -15,7 +15,6 @@ type TaskRepository interface {
 
 func (intractor Interactor) CreateTask(task entity.Task) {
 	intractor.store.Create(&task)
-	intractor.store.Save(&task)
 }
 
 func (intractor Interactor) DeleteTask(task entity.Task) error {
