@@ -13,16 +13,23 @@ import (
 
 func main() {
 
-	dsn := "host=localhost user=postgres password=12345678 dbname=go_01 port=5432 sslmode=disable TimeZone=Asia/Tehran"
-	DbConnection := infra.NewDB(dsn)
-
+	databaseDsn := "host=localhost user=postgres password=12345678 dbname=go_01 port=5432 sslmode=disable TimeZone=Asia/Tehran"
+	redisDsn := map[string]any{
+		"addr":     "localhost:6379",
+		"password": "",
+		"db":       0,
+	}
+	DbConnection := infra.NewDB(databaseDsn)
+	RedisConnection := infra.NewRedis(redisDsn)
+	//RedisConnection.Connection.Set(RedisConnection.ContextBackGround, "name", "Alireza", 3300)
+	//fmt.Println(RedisConnection.Connection.Get(RedisConnection.ContextBackGround, "name"))
 	routerEngine := gin.Default()
-	router(routerEngine, DbConnection)
+	router(routerEngine, DbConnection, RedisConnection)
 
 	routerEngine.Run(":9000")
 }
 
-func router(router *gin.Engine, database infra.DB) {
+func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) {
 	router.GET("/", controller.HomeAPI())
 
 	apiV1 := router.Group("/api/v1")
