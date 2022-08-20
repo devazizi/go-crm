@@ -5,9 +5,11 @@ import (
 	"github.com/devazizi/go-crm/contract/validation"
 	"github.com/devazizi/go-crm/controller"
 	infra "github.com/devazizi/go-crm/infrastructure"
+	"github.com/devazizi/go-crm/repository"
 	"github.com/devazizi/go-crm/service/auth"
 	"github.com/devazizi/go-crm/service/jwt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"strings"
 )
 
@@ -40,7 +42,7 @@ func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) 
 			authRoutes.POST("/register", controller.RegisterAPI(database, validation.ValidateRegisterRequestFields))
 			//authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
 		}
-		taskRoutes := apiV1.Group("/tasks").Use(middlewareCheckAuthenticated())
+		taskRoutes := apiV1.Group("/tasks").Use(middlewareCheckAuthenticated(database))
 
 		{
 			taskRoutes.GET("/", controller.IndexTasks(database))
@@ -63,12 +65,12 @@ func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) 
 
 }
 
-func middlewareCheckAuthenticated() gin.HandlerFunc {
+func middlewareCheckAuthenticated(DB infra.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authorizationKey := c.GetHeader("Authorization")
 
 		if authorizationKey == "" {
-			c.JSON(401, response.Response{Status: false, Message: "authorization fail"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response.Response{Status: false, Message: "authorization fail"})
 			return
 		}
 
@@ -79,6 +81,20 @@ func middlewareCheckAuthenticated() gin.HandlerFunc {
 		user := userInfo.(map[string]interface{})
 
 		userId := user["id"].(float64)
+		tokenHash, isCorrect := user["token"].(string)
+
+		if !isCorrect {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response.Response{Status: false, Message: "authentication fail"})
+			return
+		}
+
+		isValid := repository.ValidateTokenExistInStorage(DB, tokenHash, int(userId))
+
+		if !isValid {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response.Response{Status: false, Message: "authentication fail"})
+			return
+		}
+
 		authentication := auth.Authentication{UserId: int(userId), Token: tokenData[1]}
 		authentication.SetAuthentication()
 

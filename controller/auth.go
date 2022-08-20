@@ -1,12 +1,16 @@
 package controller
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"github.com/devazizi/go-crm/contract"
+	"github.com/devazizi/go-crm/contract/mocks"
 	"github.com/devazizi/go-crm/contract/request"
 	"github.com/devazizi/go-crm/contract/response"
 	"github.com/devazizi/go-crm/entity"
 	"github.com/devazizi/go-crm/infrastructure"
 	"github.com/devazizi/go-crm/repository"
+	"github.com/devazizi/go-crm/service/helpers"
 	"github.com/devazizi/go-crm/service/jwt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -38,7 +42,22 @@ func LoginAPI(DB infrastructure.DB, requestValidator contract.ValidateLoginReque
 			return
 		}
 
-		token, _ := jwt.CreateToken("2332-abcd-acdf-ccd2", user)
+		tokenHash := sha256.Sum256([]byte(helpers.RandomString(50)))
+		token := hex.EncodeToString(tokenHash[:])
+		_, err = repository.CreateClientToken(DB, user, token)
+
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "email or password incorrect"})
+			return
+		}
+
+		userMock := mocks.UserMock{
+			ID:    user.ID,
+			Name:  user.Name,
+			Token: token,
+		}
+
+		token, _ = jwt.CreateToken("2332-abcd-acdf-ccd2", userMock)
 
 		c.JSON(http.StatusOK, response.Response{
 			Status: response.SUCCESS, Data: response.LoginResponse{User: user, Token: token},

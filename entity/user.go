@@ -11,6 +11,7 @@ type User struct {
 	Password  string    `json:"-" gorm:"size:512"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	Token     []Token
 }
 
 func (user *User) SetPassword(newPassword string) bool {
