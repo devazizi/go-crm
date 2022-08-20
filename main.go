@@ -23,8 +23,6 @@ func main() {
 	}
 	DbConnection := infra.NewDB(databaseDsn)
 	RedisConnection := infra.NewRedis(redisDsn)
-	//RedisConnection.Connection.Set(RedisConnection.ContextBackGround, "name", "Alireza", 3300)
-	//fmt.Println(RedisConnection.Connection.Get(RedisConnection.ContextBackGround, "name"))
 	routerEngine := gin.Default()
 	router(routerEngine, DbConnection, RedisConnection)
 
