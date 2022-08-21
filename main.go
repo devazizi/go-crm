@@ -43,28 +43,25 @@ func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) 
 			authRoutes.POST("/register", controller.RegisterAPI(database, validation.ValidateRegisterRequestFields))
 			//authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
 		}
-		taskRoutes := apiV1.Group("/tasks").Use(middlewareCheckAuthenticated(database))
 
+		taskRoutes := apiV1.Group("/tasks").Use(middlewareCheckAuthenticated(database))
 		{
 			taskRoutes.GET("/", controller.IndexTasks(database))
 			taskRoutes.POST("/", controller.CreateTask(database, validation.ValidateCreateTaskRequest))
 			taskRoutes.GET("/:taskId", controller.GetTask(database))
 			taskRoutes.DELETE("/:taskId", controller.DeleteTask(database))
 		}
+
+		taskCategoryRoutes := apiV1.Group("/task-categories").Use(middlewareCheckAuthenticated(database))
+		{
+			taskCategoryRoutes.GET("/", controller.IndexTaskCategory(database))
+			// 	taskCategoryRoutes.POST("/", controller.CreateTask(database, validation.ValidateCreateTaskRequest))
+			taskCategoryRoutes.GET("/:taskCategoryId", controller.GetTaskCategory(database))
+			// 	taskCategoryRoutes.DELETE("/:taskCategoryId", controller.DeleteTask(database))
+		}
 	}
-
-	//usersRoutes := router.Group("/users")
-	//{
-	//	//usersRoutes.POST("/", controller.)
-	//	//usersRoutes.GET("/", controller)
-	//	//usersRoutes.GET("/:userId")
-	//	//usersRoutes.PUT("/:userId")
-	//	//usersRoutes.DELETE("/:userId")
-	//	//usersRoutes.GET("/user")
-	//}
-	//
-
 }
+
 func middlewareCros() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
