@@ -1,6 +1,9 @@
 package main
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/devazizi/go-crm/contract/response"
 	"github.com/devazizi/go-crm/contract/validation"
 	"github.com/devazizi/go-crm/controller"
@@ -9,8 +12,6 @@ import (
 	"github.com/devazizi/go-crm/service/auth"
 	"github.com/devazizi/go-crm/service/jwt"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"strings"
 )
 
 func main() {
@@ -26,10 +27,12 @@ func main() {
 	routerEngine := gin.Default()
 	router(routerEngine, DbConnection, RedisConnection)
 
-	routerEngine.Run(":9000")
+	routerEngine.Run("localhost:9000")
 }
 
 func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) {
+
+	router.Use(middlewareCros())
 	router.GET("/", controller.HomeAPI())
 
 	apiV1 := router.Group("/api/v1")
@@ -61,6 +64,20 @@ func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) 
 	//}
 	//
 
+}
+func middlewareCros() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "*")
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+
+	}
 }
 
 func middlewareCheckAuthenticated(DB infra.DB) gin.HandlerFunc {

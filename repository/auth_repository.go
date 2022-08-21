@@ -15,7 +15,12 @@ type AuthRepository interface {
 
 func CreateClientToken(DB infra.DB, user entity.User, tokenHash string) (entity.Token, error) {
 
-	token := entity.Token{UserID: int(user.ID), Hash: tokenHash, ExpiryDate: time.Now().AddDate(0, 0, 30)}
+	token := entity.Token{
+		UserID:     int(user.ID),
+		Hash:       tokenHash,
+		ExpiryDate: time.Now().AddDate(0, 0, 30),
+	}
+
 	result := DB.Connection.Create(&token)
 
 	if result.Error != nil {

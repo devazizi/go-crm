@@ -3,6 +3,8 @@ package controller
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"net/http"
+
 	"github.com/devazizi/go-crm/contract"
 	"github.com/devazizi/go-crm/contract/mocks"
 	"github.com/devazizi/go-crm/contract/request"
@@ -14,7 +16,6 @@ import (
 	"github.com/devazizi/go-crm/service/jwt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"net/http"
 )
 
 func LoginAPI(DB infrastructure.DB, requestValidator contract.ValidateLoginRequestFields) gin.HandlerFunc {
@@ -33,12 +34,12 @@ func LoginAPI(DB infrastructure.DB, requestValidator contract.ValidateLoginReque
 
 		user, err := repository.CheckUserExistsByEmail(DB, loginRequest.Email)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "email or password incorrect"})
+			c.JSON(http.StatusUnauthorized, response.Response{Message: "we can't match with or credential"})
 			return
 		}
 
 		if err := bcrypt.CompareHashAndPassword([]byte(user.GetPassword()), []byte(loginRequest.Password)); err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "email or password incorrect"})
+			c.JSON(http.StatusUnauthorized, response.Response{Message: "we can't match with or credential"})
 			return
 		}
 
