@@ -10,6 +10,7 @@ type TaskCategoryRepository interface {
 	IndexTaskCategory() []entity.TaskCategory
 	GetTaskCategory(taskCategoryId int) (entity.TaskCategory, error)
 	DeleteTaskCategory(taskCategory entity.TaskCategory)
+	CreateTaskCategory(taskCategory entity.TaskCategory) entity.TaskCategory
 }
 
 func (i Interactor) IndexTaskCategory() []entity.TaskCategory {
@@ -32,4 +33,10 @@ func (i Interactor) GetTaskCategory(taskCategoryId int) (entity.TaskCategory, er
 
 func (i Interactor) DeleteTaskCategory(taskCategory entity.TaskCategory) {
 	i.store.Delete(&taskCategory)
+}
+
+func (i Interactor) CreateTaskCategory(taskCategory entity.TaskCategory) entity.TaskCategory {
+	i.store.Create(&taskCategory)
+
+	return taskCategory
 }

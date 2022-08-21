@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"github.com/devazizi/go-crm/contract"
+	"github.com/devazizi/go-crm/contract/request"
 	"github.com/devazizi/go-crm/contract/response"
+	"github.com/devazizi/go-crm/entity"
 	"github.com/devazizi/go-crm/infrastructure"
 	"github.com/devazizi/go-crm/repository"
 	"github.com/gin-gonic/gin"
@@ -53,4 +56,30 @@ func DeleteTaskCategory(DB infrastructure.DB) gin.HandlerFunc {
 
 		c.JSON(http.StatusOK, response.Response{Status: true})
 	}
+}
+
+func CreateTaskCategory(DB infrastructure.DB, validator contract.ValidateCreateTaskCategoryRequest) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		createTaskCategoryRequest := request.CreateTaskCategoryRequest{}
+
+		if err := c.BindJSON(&createTaskCategoryRequest); err != nil {
+			c.JSON(http.StatusBadRequest, response.Response{Message: "Bad Request"})
+			return
+		}
+
+		if err := validator(createTaskCategoryRequest); err != nil {
+			c.JSON(http.StatusUnprocessableEntity, response.Response{Message: err.Error()})
+			return
+		}
+
+		taskCategory := entity.TaskCategory{
+			Name: createTaskCategoryRequest.Name,
+		}
+
+		data := repository.New(DB).CreateTaskCategory(taskCategory)
+
+		c.JSON(http.StatusOK, response.Response{Status: true, Data: data})
+	}
+
 }

@@ -55,7 +55,7 @@ func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) 
 		taskCategoryRoutes := apiV1.Group("/task-categories").Use(middlewareCheckAuthenticated(database))
 		{
 			taskCategoryRoutes.GET("/", controller.IndexTaskCategory(database))
-			// 	taskCategoryRoutes.POST("/", controller.CreateTask(database, validation.ValidateCreateTaskRequest))
+			taskCategoryRoutes.POST("/", controller.CreateTaskCategory(database, validation.ValidateCreateTaskCategoryRequest))
 			taskCategoryRoutes.GET("/:taskCategoryId", controller.GetTaskCategory(database))
 			taskCategoryRoutes.DELETE("/:taskCategoryId", controller.DeleteTaskCategory(database))
 		}
