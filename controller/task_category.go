@@ -35,5 +35,22 @@ func GetTaskCategory(DB infrastructure.DB) gin.HandlerFunc {
 
 		c.JSON(http.StatusOK, response.Response{Status: true, Data: taskCategory})
 	}
+}
 
+func DeleteTaskCategory(DB infrastructure.DB) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		taskCategoryId, _ := strconv.Atoi(c.Param("taskCategoryId"))
+
+		taskCategory, err := repository.New(DB).GetTaskCategory(taskCategoryId)
+
+		if err != nil {
+			c.JSON(http.StatusNotFound, response.Response{Message: "not found"})
+			return
+		}
+
+		repository.New(DB).DeleteTaskCategory(taskCategory)
+
+		c.JSON(http.StatusOK, response.Response{Status: true})
+	}
 }

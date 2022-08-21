@@ -57,7 +57,7 @@ func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) 
 			taskCategoryRoutes.GET("/", controller.IndexTaskCategory(database))
 			// 	taskCategoryRoutes.POST("/", controller.CreateTask(database, validation.ValidateCreateTaskRequest))
 			taskCategoryRoutes.GET("/:taskCategoryId", controller.GetTaskCategory(database))
-			// 	taskCategoryRoutes.DELETE("/:taskCategoryId", controller.DeleteTask(database))
+			taskCategoryRoutes.DELETE("/:taskCategoryId", controller.DeleteTaskCategory(database))
 		}
 	}
 }
