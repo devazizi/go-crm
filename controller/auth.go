@@ -12,6 +12,7 @@ import (
 	"github.com/devazizi/go-crm/entity"
 	"github.com/devazizi/go-crm/infrastructure"
 	"github.com/devazizi/go-crm/repository"
+	"github.com/devazizi/go-crm/service/auth"
 	"github.com/devazizi/go-crm/service/helpers"
 	"github.com/devazizi/go-crm/service/jwt"
 	"github.com/gin-gonic/gin"
@@ -98,4 +99,30 @@ func ForgetPassword(DB infrastructure.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 	}
+}
+
+func ChangePassword(DB infrastructure.DB, validator contract.ValidateChangePasswordRequestFields) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		request := request.ChangePasswordRequest{}
+
+		if err := c.BindJSON(&request); err != nil {
+			c.JSON(http.StatusBadRequest, response.Response{Message: err.Error(), Status: false})
+			return
+		}
+
+		if err := validator(request); err != nil {
+			c.JSON(http.StatusBadRequest, response.Response{Message: err.Error(), Status: false})
+			return
+		}
+
+		auth := auth.GetAuthentication()
+
+		encryptedPass, _ := bcrypt.GenerateFromPassword([]byte(request.NewPassword), 1)
+
+		repository.New(DB).UpdateClientPassword(auth.UserId, string(encryptedPass))
+
+		c.JSON(http.StatusOK, response.Response{Status: response.SUCCESS, Data: nil})
+	}
+
 }

@@ -63,3 +63,7 @@ func ValidateTokenExistInStorage(DB infra.DB, tokenHash string, userId int) bool
 
 	return true
 }
+
+func (i Interactor) UpdateClientPassword(userId int, password string) {
+	i.store.Model(&entity.User{}).Where("id = ?", userId).Update("password", password)
+}

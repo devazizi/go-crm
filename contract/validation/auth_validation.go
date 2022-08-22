@@ -25,3 +25,18 @@ func ValidateRegisterRequestFields(registerRequest request.RegisterRequest, DB i
 		validation.Field(&registerRequest.Email, validation.Required, is.Email, validation.By(rules.CheckEmailMustUnique(DB))),
 	)
 }
+
+func ValidateChangePasswordRequestFields(request request.ChangePasswordRequest) error {
+
+	return validation.ValidateStruct(
+		&request,
+		validation.Field(&request.CurrentPassword, validation.Required, validation.Length(8, 256)),
+		validation.Field(
+			&request.NewPassword,
+			validation.Required,
+			validation.Length(8, 256),
+			validation.By(rules.CheckEqualPasswordWithConfirmation(request.ConfirmNewPassword)),
+		),
+		validation.Field(&request.ConfirmNewPassword, validation.Required, validation.Length(8, 256)),
+	)
+}

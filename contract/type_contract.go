@@ -6,9 +6,10 @@ import (
 )
 
 type (
-	ValidateLoginRequestFields        func(req request.LoginRequest) error
-	ValidateRegisterRequestFields     func(registerRequest request.RegisterRequest, DB infrastructure.DB) error
-	ValidateCreateTaskRequest         func(req request.CreateTaskRequest) error
-	ValidateCreateTaskCategoryRequest func(req request.CreateTaskCategoryRequest) error
-	ValidateUpdateTaskCategoryRequest func(req request.UpdateTaskCategoryRequest) error
+	ValidateLoginRequestFields          func(req request.LoginRequest) error
+	ValidateRegisterRequestFields       func(registerRequest request.RegisterRequest, DB infrastructure.DB) error
+	ValidateCreateTaskRequest           func(req request.CreateTaskRequest) error
+	ValidateCreateTaskCategoryRequest   func(req request.CreateTaskCategoryRequest) error
+	ValidateUpdateTaskCategoryRequest   func(req request.UpdateTaskCategoryRequest) error
+	ValidateChangePasswordRequestFields func(request request.ChangePasswordRequest) error
 )

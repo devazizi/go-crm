@@ -22,3 +22,17 @@ func CheckEmailMustUnique(DB infrastructure.DB) validation.RuleFunc {
 	}
 
 }
+
+func CheckEqualPasswordWithConfirmation(passwordConfirmation string) validation.RuleFunc {
+
+	return func(value interface{}) error {
+		newPassword, _ := value.(string)
+
+		if newPassword != passwordConfirmation {
+			return errors.New("password and confirmation not equal")
+		}
+
+		return nil
+	}
+
+}
