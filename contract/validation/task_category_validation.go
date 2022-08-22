@@ -11,3 +11,10 @@ func ValidateCreateTaskCategoryRequest(req request.CreateTaskCategoryRequest) er
 		validation.Field(&req.Name, validation.Required, validation.Length(3, 256)),
 	)
 }
+
+func ValidateUpdateTaskCategoryRequest(req request.UpdateTaskCategoryRequest) error {
+	return validation.ValidateStruct(
+		&req,
+		validation.Field(&req.Name, validation.Required, validation.Length(3, 256)),
+	)
+}

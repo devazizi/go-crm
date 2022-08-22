@@ -10,4 +10,5 @@ type (
 	ValidateRegisterRequestFields     func(registerRequest request.RegisterRequest, DB infrastructure.DB) error
 	ValidateCreateTaskRequest         func(req request.CreateTaskRequest) error
 	ValidateCreateTaskCategoryRequest func(req request.CreateTaskCategoryRequest) error
+	ValidateUpdateTaskCategoryRequest func(req request.UpdateTaskCategoryRequest) error
 )
