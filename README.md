@@ -1,4 +1,4 @@
-# Go lang CRM
+# Go CRM
 #### simple CRM written with golang (Gin, Gorm)
 
 __how u can run the project__
