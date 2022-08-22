@@ -1,7 +1,10 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 
 	"github.com/devazizi/go-crm/contract/response"
@@ -15,15 +18,12 @@ import (
 )
 
 func main() {
+	environmentVariables()
 
-	databaseDsn := "host=localhost user=postgres password=12345678 dbname=go_01 port=5432 sslmode=disable TimeZone=Asia/Tehran"
-	redisDsn := map[string]any{
-		"addr":     "localhost:6379",
-		"password": "",
-		"db":       0,
-	}
+	databaseDsn := os.Getenv("DATABASE_DSN")
+
 	DbConnection := infra.NewDB(databaseDsn)
-	RedisConnection := infra.NewRedis(redisDsn)
+	RedisConnection := infra.NewRedis(prepareRedis())
 	routerEngine := gin.Default()
 	router(routerEngine, DbConnection, RedisConnection)
 
@@ -32,7 +32,7 @@ func main() {
 
 func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) {
 
-	router.Use(middlewareCros())
+	router.Use(middlewareCORS())
 	router.GET("/", controller.HomeAPI())
 
 	apiV1 := router.Group("/api/v1")
@@ -67,7 +67,22 @@ func router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) 
 	}
 }
 
-func middlewareCros() gin.HandlerFunc {
+func environmentVariables() {
+	godotenv.Load(".env")
+}
+
+func prepareRedis() map[string]any {
+
+	redisDB, _ := strconv.Atoi(os.Getenv("REDIS_DB"))
+
+	return map[string]any{
+		"addr":     os.Getenv("REDIS_ADDRESS"),
+		"password": os.Getenv("REDIS_PASSWORD"),
+		"db":       redisDB,
+	}
+}
+
+func middlewareCORS() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
