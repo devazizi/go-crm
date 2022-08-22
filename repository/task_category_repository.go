@@ -16,7 +16,7 @@ type TaskCategoryRepository interface {
 
 func (i Interactor) IndexTaskCategory() []entity.TaskCategory {
 	var taskCategories []entity.TaskCategory
-	i.store.Find(&taskCategories)
+	i.store.Order("id desc").Find(&taskCategories)
 
 	return taskCategories
 }
