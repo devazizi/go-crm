@@ -36,7 +36,7 @@ func GetTask(DB infrastructure.DB) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusNotFound, response.Response{Status: true, Data: task})
+		c.JSON(http.StatusOK, response.Response{Status: true, Data: task})
 	}
 }
 
