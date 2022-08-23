@@ -1,8 +1,10 @@
 package repository
 
 import (
+	"errors"
 	"github.com/devazizi/go-crm/entity"
 	infra "github.com/devazizi/go-crm/infrastructure"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -11,6 +13,8 @@ type AuthRepository interface {
 	CheckEmailIsUnique(DB infra.DB, email string) bool
 	CreateClientToken(DB infra.DB, user entity.User, tokenHash string) (entity.Token, error)
 	ValidateTokenExistInStorage(DB infra.DB, token string, userId int) bool
+	UpdateClientPassword(userId int, password string)
+	GetUserByEmail(email string) (entity.User, error)
 }
 
 func CreateClientToken(DB infra.DB, user entity.User, tokenHash string) (entity.Token, error) {
@@ -66,4 +70,15 @@ func ValidateTokenExistInStorage(DB infra.DB, tokenHash string, userId int) bool
 
 func (i Interactor) UpdateClientPassword(userId int, password string) {
 	i.store.Model(&entity.User{}).Where("id = ?", userId).Update("password", password)
+}
+
+func (i Interactor) GetUserByEmail(email string) (entity.User, error) {
+	var user entity.User
+	result := i.store.Where("email = ?", email).First(&user)
+
+	if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return user, result.Error
+	}
+
+	return user, nil
 }

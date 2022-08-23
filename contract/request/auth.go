@@ -16,3 +16,7 @@ type ChangePasswordRequest struct {
 	NewPassword        string `json:"new_password"`
 	ConfirmNewPassword string `json:"confirm_new_password"`
 }
+
+type ForgetPasswordRequest struct {
+	Email string `json:"email"`
+}

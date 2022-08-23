@@ -18,7 +18,7 @@ func Router(router *gin.Engine, database infra.DB, redis infra.RedisConnection) 
 		{
 			authRoutes.POST("/login", controller.LoginAPI(database, validation.ValidateLoginRequestFields))
 			authRoutes.POST("/register", controller.RegisterAPI(database, validation.ValidateRegisterRequestFields))
-			//authRoutes.POST("/forget-password", controller.ForgetPassword(nil))
+			authRoutes.POST("/forget-password", controller.ForgetPassword(database, validation.ValidateForgetPasswordRequestFields))
 			authRoutes.Use(middlewareCheckAuthenticated(database)).POST(
 				"/change-password",
 				controller.ChangePassword(database, validation.ValidateChangePasswordRequestFields),

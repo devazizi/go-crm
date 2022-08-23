@@ -12,4 +12,5 @@ type (
 	ValidateCreateTaskCategoryRequest   func(req request.CreateTaskCategoryRequest) error
 	ValidateUpdateTaskCategoryRequest   func(req request.UpdateTaskCategoryRequest) error
 	ValidateChangePasswordRequestFields func(request request.ChangePasswordRequest) error
+	ValidateForgetPasswordRequestFields func(request request.ForgetPasswordRequest) error
 )

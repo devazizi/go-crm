@@ -26,6 +26,14 @@ func ValidateRegisterRequestFields(registerRequest request.RegisterRequest, DB i
 	)
 }
 
+func ValidateForgetPasswordRequestFields(request request.ForgetPasswordRequest) error {
+
+	return validation.ValidateStruct(
+		&request,
+		validation.Field(&request.Email, validation.Required, is.Email),
+	)
+}
+
 func ValidateChangePasswordRequestFields(request request.ChangePasswordRequest) error {
 
 	return validation.ValidateStruct(

@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"net/http"
+	"strings"
 
 	"github.com/devazizi/go-crm/contract"
 	"github.com/devazizi/go-crm/contract/mocks"
@@ -95,9 +96,43 @@ func RegisterAPI(DB infrastructure.DB, validator contract.ValidateRegisterReques
 	}
 }
 
-func ForgetPassword(DB infrastructure.DB) gin.HandlerFunc {
+func ForgetPassword(DB infrastructure.DB, validator contract.ValidateForgetPasswordRequestFields) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		request := request.ForgetPasswordRequest{}
 
+		if err := c.BindJSON(&request); err != nil {
+			c.JSON(http.StatusBadRequest, response.Response{Message: err.Error(), Status: false})
+			return
+		}
+
+		if err := validator(request); err != nil {
+			c.JSON(http.StatusBadRequest, response.Response{Message: err.Error(), Status: false})
+			return
+		}
+
+		user, err := repository.New(DB).GetUserByEmail(request.Email)
+
+		if err != nil {
+			c.JSON(http.StatusOK, response.Response{Message: "if exists our record we send email", Status: true})
+			return
+		}
+		newPassword := helpers.RandomString(15)
+		emailTxt := "To: recipient@example.net\r\n" +
+			"Subject: reset password\r\n" +
+			"\r\n" +
+			"New password : {password} request from ip {ip} \r\n"
+
+		emailTxt = strings.Replace(emailTxt, "{password}", newPassword, 1)
+		emailTxt = strings.Replace(emailTxt, "{ip}", c.ClientIP(), 1)
+
+		sendEmailError := infrastructure.NewSMTP().SendEmail([]string{user.Email}, []byte(emailTxt))
+
+		if sendEmailError != nil {
+			c.JSON(http.StatusInternalServerError, response.Response{Message: "sending email not available now", Status: false})
+			return
+		}
+
+		c.JSON(http.StatusOK, response.Response{Message: "if exists our record we send email", Status: true})
 	}
 }
 
