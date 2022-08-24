@@ -15,9 +15,3 @@ func RandomString(n int) string {
 	}
 	return sb.String()
 }
-
-//func main() {
-//	rand.Seed(time.Now().UnixNano())
-//
-//	fmt.Println(randomString(20))
-//}
