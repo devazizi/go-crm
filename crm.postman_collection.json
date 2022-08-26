@@ -1,0 +1,437 @@
+{
+	"info": {
+		"_postman_id": "a8d8ace7-477c-43c3-8953-30d69c852572",
+		"name": "Go_01",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"dev.azizimail@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"fsimsple@example.com\",\r\n    \"name\" : \"Hello\",\r\n    \"password\": \"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/auth/register",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Password",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzMyLWFiY2QtYWNkZi1jY2QyIiwiZXhwIjoxNjYzNjYwNDMxLCJVc2VySW5mbyI6eyJpZCI6MSwibmFtZSI6IkFsaXJlemEiLCJ0b2tlbiI6IjBmMDU2MTM5Y2FkOWU0NTBlMDk3ZWM0NWU5MTQxOTBmNzMzMTljZjkwNThhN2JiODM5YTlmNTU1NGE5OGQ3NmYifX0.bxeUl_ZpPjibSW4AkORImgk0TTd4CsIOA3nquv8LFqs",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"current_password\": \"E12345678\",\r\n    \"new_password\": \"12345678\",\r\n    \"confirm_new_password\": \"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/auth/change-password",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"change-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Index All Tasks",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzMyLWFiY2QtYWNkZi1jY2QyIiwiZXhwIjoxNjYzNjYwNDMxLCJVc2VySW5mbyI6eyJpZCI6MSwibmFtZSI6IkFsaXJlemEiLCJ0b2tlbiI6IjBmMDU2MTM5Y2FkOWU0NTBlMDk3ZWM0NWU5MTQxOTBmNzMzMTljZjkwNThhN2JiODM5YTlmNTU1NGE5OGQ3NmYifX0.bxeUl_ZpPjibSW4AkORImgk0TTd4CsIOA3nquv8LFqs",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:9000/api/v1/tasks",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Task",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzMyLWFiY2QtYWNkZi1jY2QyIiwiZXhwIjoxNjYzNjY5OTUzLCJVc2VySW5mbyI6eyJpZCI6MSwibmFtZSI6IkFsaXJlemEiLCJ0b2tlbiI6IjBmMDU2MTM5Y2FkOWU0NTBlMDk3ZWM0NWU5MTQxOTBmNzMzMTljZjkwNThhN2JiODM5YTlmNTU1NGE5OGQ3NmYifX0.CzZNLoUq_tX_up5-h1goRe17ID9W5p6InPNWfmscNKM",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"simple Task _ 33\",\r\n    \"category_id\": 5,\r\n    \"assign_to\" : [1,4,3,9,7,8,9,25],\r\n    \"description\": \"Simple Task Tree\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/auth/change-password",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"change-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Task",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzMyLWFiY2QtYWNkZi1jY2QyIiwiZXhwIjoxNjYzNjYwNDMxLCJVc2VySW5mbyI6eyJpZCI6MSwibmFtZSI6IkFsaXJlemEiLCJ0b2tlbiI6IjBmMDU2MTM5Y2FkOWU0NTBlMDk3ZWM0NWU5MTQxOTBmNzMzMTljZjkwNThhN2JiODM5YTlmNTU1NGE5OGQ3NmYifX0.bxeUl_ZpPjibSW4AkORImgk0TTd4CsIOA3nquv8LFqs",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:9000/api/v1/tasks/2",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"tasks",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Task",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/v1/tasks/5",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"tasks",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Index Task Category",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzMyLWFiY2QtYWNkZi1jY2QyIiwiZXhwIjoxNjYzNjY5OTUzLCJVc2VySW5mbyI6eyJpZCI6MSwibmFtZSI6IkFsaXJlemEiLCJ0b2tlbiI6IjBmMDU2MTM5Y2FkOWU0NTBlMDk3ZWM0NWU5MTQxOTBmNzMzMTljZjkwNThhN2JiODM5YTlmNTU1NGE5OGQ3NmYifX0.CzZNLoUq_tX_up5-h1goRe17ID9W5p6InPNWfmscNKM",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:9000/api/v1/task-categories",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"task-categories"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Task Category",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzMyLWFiY2QtYWNkZi1jY2QyIiwiZXhwIjoxNjYzNjY5OTUzLCJVc2VySW5mbyI6eyJpZCI6MSwibmFtZSI6IkFsaXJlemEiLCJ0b2tlbiI6IjBmMDU2MTM5Y2FkOWU0NTBlMDk3ZWM0NWU5MTQxOTBmNzMzMTljZjkwNThhN2JiODM5YTlmNTU1NGE5OGQ3NmYifX0.CzZNLoUq_tX_up5-h1goRe17ID9W5p6InPNWfmscNKM",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Three Task Category \"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/task-categories",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"task-categories"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Task Category",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzMyLWFiY2QtYWNkZi1jY2QyIiwiZXhwIjoxNjYzNjY5OTUzLCJVc2VySW5mbyI6eyJpZCI6MSwibmFtZSI6IkFsaXJlemEiLCJ0b2tlbiI6IjBmMDU2MTM5Y2FkOWU0NTBlMDk3ZWM0NWU5MTQxOTBmNzMzMTljZjkwNThhN2JiODM5YTlmNTU1NGE5OGQ3NmYifX0.CzZNLoUq_tX_up5-h1goRe17ID9W5p6InPNWfmscNKM",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Updated Zo Task Category \"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/task-categories/23",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"task-categories",
+						"23"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Task Category",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzMyLWFiY2QtYWNkZi1jY2QyIiwiZXhwIjoxNjYzNjY5OTUzLCJVc2VySW5mbyI6eyJpZCI6MSwibmFtZSI6IkFsaXJlemEiLCJ0b2tlbiI6IjBmMDU2MTM5Y2FkOWU0NTBlMDk3ZWM0NWU5MTQxOTBmNzMzMTljZjkwNThhN2JiODM5YTlmNTU1NGE5OGQ3NmYifX0.CzZNLoUq_tX_up5-h1goRe17ID9W5p6InPNWfmscNKM",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:9000/api/v1/task-categories/1",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"task-categories",
+						"1"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Task Category",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMzMyLWFiY2QtYWNkZi1jY2QyIiwiZXhwIjoxNjYzNjY5OTUzLCJVc2VySW5mbyI6eyJpZCI6MSwibmFtZSI6IkFsaXJlemEiLCJ0b2tlbiI6IjBmMDU2MTM5Y2FkOWU0NTBlMDk3ZWM0NWU5MTQxOTBmNzMzMTljZjkwNThhN2JiODM5YTlmNTU1NGE5OGQ3NmYifX0.CzZNLoUq_tX_up5-h1goRe17ID9W5p6InPNWfmscNKM",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:9000/api/v1/task-categories/3",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"task-categories",
+						"3"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forget Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"devazizi@outlook.com\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/auth/forget-password",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"forget-password"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

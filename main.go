@@ -1,12 +1,13 @@
 package main
 
 import (
+	"os"
+	"strconv"
+
 	infra "github.com/devazizi/go-crm/infrastructure"
 	"github.com/devazizi/go-crm/router"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"os"
-	"strconv"
 )
 
 func environmentVariables() {
@@ -33,6 +34,5 @@ func main() {
 	RedisConnection := infra.NewRedis(prepareRedis())
 	routerEngine := gin.Default()
 	router.Router(routerEngine, DbConnection, RedisConnection)
-
 	routerEngine.Run("localhost:9000")
 }
